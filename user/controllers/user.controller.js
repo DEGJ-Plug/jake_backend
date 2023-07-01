@@ -37,20 +37,21 @@ const userSignUp = async (req, res) => {
       { expiresIn: process.env.JWT_VERIFICATION_EXP },
     );
 
-    const verificationUrl = `http://localhost:8090/auth/verify?token=${token}`;
+    const verificationUrl = `http://localhost:${process.env.PORT}/auth/verify?token=${token}`;
     // DANNY do we have to wait until the mail is sent before the registration process ends ??
     await sendEmail({
       email,
-      subject: 'Welcome to Jake',
-      text: 'Welcome to Jake',
-      html: `<h1>Hey ${userName}, welcome to Jake, have a blast😉</h1> <p>please <a href=${verificationUrl}>verify</a> your account</p>`,
-      message: 'Welcome to Jake',
+      subject: 'Account Verification',
+      text: '',
+      html: `Hey ${userName},<p>Welcome to Jake, kindly <a href=${verificationUrl}>verify</a> your account<p>`,
+      message: 'Verification',
     });
 
     return res.status(201).json({
       status: 'success',
       message: `${userName}, your account has been created successfully`,
       userId: newUser._id,
+      tokenExpiration: '48 hours',
     });
   } catch (error) {
     return res.status(500).json({ error: error.message });
@@ -74,6 +75,13 @@ const verifyUser = async (req, res) => {
 
     user.isVerified = true;
     await user.save();
+    await sendEmail({
+      email: user.email,
+      subject: 'Welcome to Jake',
+      text: '',
+      html: `Hey ${user.userName},<p>Your account has been verified successfully.<p><p>Enjoy Jake</p>`,
+      message: 'Welcome to Jake',
+    });
     return res
       .status(200)
       .json({ message: 'Your account has been verified successfully' });
