@@ -117,13 +117,19 @@ const userLogin = async (req, res, next) => {
   }
 };
 
-const profile = (req, res) => {
+const profile = async (req, res) => {
   const { user } = req;
   // const decode = jwt.decode(req.cookies.token, {});
   // const _exp = decode.exp * 1000;
   // const _date = new Date(_exp);
   // console.log(_date);
-  res.status(200).send({ message: `Welcome back ${user.userName}`, user });
+  const existingUser = await User.findOne({ userName: user.userName, email: user.email });
+  // console.log(existingUser);
+  if (existingUser) {
+    return res.status(200).send({ message: `Welcome back ${user.userName}`, user });
+  }
+  res.clearCookie('token');
+  return res.status(401).redirect('/');
 };
 module.exports = {
   userSignUp,

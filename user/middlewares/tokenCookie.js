@@ -5,7 +5,7 @@ const validToken = (req, res, next) => {
   try {
     const user = jwt.verify(token, process.env.JWT_VERIFICATION_SECRET);
     req.user = user;
-    next();
+    return next();
   } catch (error) {
     res.clearCookie('token');
     return res.status(401).send({ error: 'Invalid user token' });
