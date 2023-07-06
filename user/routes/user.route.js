@@ -16,7 +16,7 @@ const authrouter = Router();
 const userprofile = Router();
 
 authrouter.get("/verify", verifyUser);
-authrouter.post("/signup", userValidation, userSignUp);
+authrouter.post("/register", userValidation, userSignUp);
 authrouter.post("/login", userLogin);
 authrouter.post("/reset-token", resetToken);
 // for frontend takes the token from the url & passes it as authorization header
@@ -24,7 +24,7 @@ authrouter.post("/reset-token", resetToken);
 authrouter.post("/reset-password", validToken, resetPassword);
 
 userprofile.get("/", validToken, profile);
-userprofile.get(
+userprofile.post(
   "/update-profile",
   validToken,
   upload.single("image"),

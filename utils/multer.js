@@ -2,8 +2,18 @@ const multer = require("multer");
 
 const storage = multer.diskStorage({});
 
-const fileFilter = (req, file, cb) => {};
+// const fileFilter = (req, file, cb) => {
+//   if (file.mimetype.startsWith("image/")) {
+//     cb(null, true);
+//   } else {
+//     cb(new Error("Invalid file type"));
+//   }
+// };
 
-const limits = 4 * 1024 * 1024;
+// const limits = {
+//   fileSize: 1 * 1024 * 1024,
+// };
 
-const upload = multer({ storage, fileFilter, limits });
+const upload = multer({ storage });
+
+module.exports = upload;

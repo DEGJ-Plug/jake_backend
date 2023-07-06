@@ -1,4 +1,5 @@
 const Product = require("../models/product.model");
+const Profile = require("../../user/models/profile.model");
 const cloudinary = require("../../utils/cloudinary");
 
 const addProduct = async (req, res) => {
@@ -6,11 +7,31 @@ const addProduct = async (req, res) => {
   const { productName, productDescription, quantity, price } = req.body;
   const { image1, image2, image3, image4 } = req.files;
   try {
+    const checkProfile = await Profile.findOne({ userId });
+
+    console.log(checkProfile);
+    if (
+      !checkProfile.location ||
+      !checkProfile.address ||
+      !checkProfile.businessName ||
+      !checkProfile.phoneNumber
+    )
+      return res
+        .status(400)
+        .json({ message: "update profile before you add your products" });
+
+    console.log(checkProfile.address);
+
     if (!productName || !productDescription || !quantity || !price)
-      throw new Error(
-        "product name, description, quantity, price are required"
-      );
-    if (!req.files) throw new Error("Four (4) images must be added!");
+      return res.status(400).json({
+        message: "product name, description, quantity, price are required",
+      });
+
+    console.log(req.files);
+    if (!req.files)
+      return res
+        .status(400)
+        .json({ message: "Four (4) images must be added!" });
 
     const [resultImg1, resultImg2, resultImg3, resultImg4] = await Promise.all([
       cloudinary.uploader.upload(image1[0].path),

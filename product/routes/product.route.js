@@ -7,7 +7,7 @@ const sellerAuth = require("../../user/middlewares/sellerAuth");
 const productRouter = Router();
 
 productRouter.post(
-  "product",
+  "/new",
   validToken,
   sellerAuth,
   upload.fields([
@@ -18,3 +18,5 @@ productRouter.post(
   ]),
   addProduct
 );
+
+module.exports = productRouter;

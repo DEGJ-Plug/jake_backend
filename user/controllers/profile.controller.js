@@ -1,6 +1,5 @@
 const Profile = require("../models/profile.model");
-const User = require("../models/user.model");
-const cloudinary = require("../models/profile.model");
+const cloudinary = require("../../utils/cloudinary");
 
 const updateProfile = async (req, res) => {
   const {
@@ -14,28 +13,22 @@ const updateProfile = async (req, res) => {
   } = req.body;
   const { userId } = req.user;
   try {
-    let image;
+    let avatar;
 
-    let [user, userProfile] = await Promise.all([
-      User.findById(userId),
-      Profile.findOne({ userId }),
-    ]);
+    const userProfile = await Profile.findOne({ userId });
 
-    if (user.role === "seller" || user.role === "logistics") {
-      if (!location || !businessName || !address || !phoneNumber) {
-        throw new Error(
-          "location, businessName, address and phoneNumber are required!"
-        );
+    if (req.file) {
+      image = await cloudinary.uploader.upload(req.file.path);
+
+      if (userProfile.avatar.publicId) {
+        await cloudinary.uploader.delete(userProfile.avatar.publicId);
       }
+      avatar = {
+        image: image.secure_url,
+        publicId: image.public_id,
+      };
     }
-
-    if (req.file) image = await cloudinary.uploader.upload(req.file.image);
-
-    if (userProfile.avatar.publicId)
-      await cloudinary.uploader.delete(userProfile.avatar.publicId);
-
-    userProfile.avatar.image = image.secure_url;
-    userProfile.avatar.publicId = image.public_id;
+    userProfile.avatar = avatar || userProfile.avatar;
 
     userProfile.firstName = firstName || userProfile.firstName;
     userProfile.lastName = lastName || userProfile.lastName;

@@ -1,0 +1,5 @@
+const emailTemplate = () => {
+  return `
+    !DOCTYPE
+    `;
+};

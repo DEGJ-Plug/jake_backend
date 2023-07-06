@@ -48,7 +48,7 @@ const userSignUp = async (req, res) => {
       email,
       subject: "Account Verification",
       text: "",
-      html: `Hey ${userName},<p>Welcome to Jake, kindly <a href=${verificationUrl}>verify</a> your account<p>`,
+      html: `<h3>Hey ${userName}</h3> <p>Welcome to Jake, kindly <a href=${verificationUrl}>verify</a> your account<p>`,
       message: "Verification",
     });
 
@@ -134,7 +134,7 @@ const userLogin = async (req, res) => {
     }
     return res.status(401).send({ error: "Invalid credentials" });
   } catch (error) {
-    return res.status(500).send({ error: error.message });
+    return res.status(500).send({ message: error.message });
   }
 };
 
@@ -207,7 +207,7 @@ async function resetPassword(req, res) {
     res.status(201).send({ success: "password updated" });
   } catch (error) {
     // console.log(error);
-    res.status(401).send({ error: error.message });
+    return res.status(401).send({ error: error.message });
   }
 }
 
