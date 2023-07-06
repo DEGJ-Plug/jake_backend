@@ -1,12 +1,11 @@
-const bcrypt = require('bcrypt');
-const jwt = require('jsonwebtoken');
-const User = require('../models/user.model');
-const sendEmail = require('../../utils/email');
+const bcrypt = require("bcrypt");
+const jwt = require("jsonwebtoken");
+const User = require("../models/user.model");
+const sendEmail = require("../../utils/email");
+const Profile = require("../models/profile.model");
 
 const userSignUp = async (req, res) => {
-  let {
-    userName, email, password, role,
-  } = req.body;
+  let { userName, email, password, role } = req.body;
   userName = userName.toLowerCase();
   email = email.toLowerCase();
   try {
@@ -31,27 +30,33 @@ const userSignUp = async (req, res) => {
       role,
     });
 
+    await Profile.create({
+      userName,
+      email,
+      userId: newUser._id,
+    });
+
     const token = jwt.sign(
       { email, userId: newUser._id, userName },
       process.env.JWT_VERIFICATION_SECRET,
-      { expiresIn: process.env.JWT_VERIFICATION_EXP },
+      { expiresIn: process.env.JWT_VERIFICATION_EXP }
     );
 
     const verificationUrl = `http://localhost:${process.env.PORT}/auth/verify?token=${token}`;
     // DANNY do we have to wait until the mail is sent before the registration process ends ??
     await sendEmail({
       email,
-      subject: 'Account Verification',
-      text: '',
+      subject: "Account Verification",
+      text: "",
       html: `Hey ${userName},<p>Welcome to Jake, kindly <a href=${verificationUrl}>verify</a> your account<p>`,
-      message: 'Verification',
+      message: "Verification",
     });
 
     return res.status(201).json({
-      status: 'success',
+      status: "success",
       message: `${userName}, your account has been created successfully`,
       userId: newUser._id,
-      tokenExpiration: '48 hours',
+      tokenExpiration: "48 hours",
     });
   } catch (error) {
     return res.status(500).json({ error: error.message });
@@ -61,8 +66,8 @@ const userSignUp = async (req, res) => {
 const verifyUser = async (req, res) => {
   const { token } = req.query;
 
-  if (!token || typeof token !== 'string') {
-    return res.status(400).json({ message: 'invalid request' });
+  if (!token || typeof token !== "string") {
+    return res.status(400).json({ message: "invalid request" });
   }
 
   try {
@@ -79,14 +84,14 @@ const verifyUser = async (req, res) => {
     await user.save();
     await sendEmail({
       email: user.email,
-      subject: 'Welcome to Jake',
-      text: '',
+      subject: "Welcome to Jake",
+      text: "",
       html: `Hey ${user.userName},<p>Your account has been verified successfully.<p><p>Enjoy Jake</p>`,
-      message: 'Welcome to Jake',
+      message: "Welcome to Jake",
     });
     return res
       .status(200)
-      .json({ message: 'Your account has been verified successfully' });
+      .json({ message: "Your account has been verified successfully" });
   } catch (error) {
     return res.status(500).json({ error: error.message });
   }
@@ -102,7 +107,7 @@ const userLogin = async (req, res) => {
     if (!userExists) {
       return res
         .status(400)
-        .json({ message: 'user does not exist, please sign up' });
+        .json({ message: "user does not exist, please sign up" });
     }
     if (userExists) {
       const validPassword = await bcrypt.compare(password, userExists.password);
@@ -112,11 +117,12 @@ const userLogin = async (req, res) => {
             userId: userExists._id,
             email: userExists.email,
             userName: userExists.userName,
+            role: userExists.role,
           },
           process.env.JWT_VERIFICATION_SECRET,
-          { expiresIn: process.env.JWT_LOGIN_EXP },
+          { expiresIn: process.env.JWT_LOGIN_EXP }
         );
-        res.cookie('token', token);
+        res.cookie("token", token);
         return res.status(200).json({
           success: true,
           data: {
@@ -126,7 +132,7 @@ const userLogin = async (req, res) => {
         });
       }
     }
-    return res.status(401).send({ error: 'Invalid credentials' });
+    return res.status(401).send({ error: "Invalid credentials" });
   } catch (error) {
     return res.status(500).send({ error: error.message });
   }
@@ -148,8 +154,8 @@ const profile = async (req, res) => {
       .status(200)
       .send({ message: `Welcome back ${user.userName}`, user });
   }
-  res.clearCookie('token');
-  return res.status(401).redirect('/');
+  res.clearCookie("token");
+  return res.status(401).redirect("/");
 };
 
 async function resetToken(req, res) {
@@ -164,38 +170,41 @@ async function resetToken(req, res) {
           email,
         },
         process.env.JWT_VERIFICATION_SECRET,
-        { expiresIn: process.env.JWT_LOGIN_EXP },
+        { expiresIn: process.env.JWT_LOGIN_EXP }
       );
       const resetLink = `${process.env.SITE_URL}:${process.env.PORT}/reset-password/${token}`;
       await sendEmail({
         email,
-        subject: 'Password Reset',
+        subject: "Password Reset",
         html: `Hi ${user.userName},<p>Follow the <a href=${resetLink}>link</a> provided to reset your password.</p><p>Simply delete this mail if you did not request a password reset</p>`,
       });
-      return res
-        .status(200)
-        .json({ message: 'Kindly visit your email inbox or spam and follow the link to reset your password' });
+      return res.status(200).json({
+        message:
+          "Kindly visit your email inbox or spam and follow the link to reset your password",
+      });
     }
   } catch (error) {
     return res.status(500).send({ error });
   }
-  return res.status(400).send({ error: 'email does not exist, please sign up' });
+  return res
+    .status(400)
+    .send({ error: "email does not exist, please sign up" });
 }
 async function resetPassword(req, res) {
   const { password, verifyPassword } = req.body;
   try {
     if (password !== verifyPassword) {
-      throw new Error('Passwords do not match');
+      throw new Error("Passwords do not match");
     }
-    const userObj = req.user;
-    const user = await User.findById({ _id: userObj.userId });
+    const id = req.user.userId;
+    const user = await User.findById({ _id: id });
     if (!user) {
-      throw new Error('Unauthorized');
+      throw new Error("Unauthorized");
     }
     const hashPassword = await bcrypt.hash(password, 10);
     user.password = hashPassword;
     user.save();
-    res.status(201).send({ success: 'password updated' });
+    res.status(201).send({ success: "password updated" });
   } catch (error) {
     // console.log(error);
     res.status(401).send({ error: error.message });
