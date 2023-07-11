@@ -1,7 +1,7 @@
-const { Router } = require("express");
-const userValidation = require("../middlewares/user.validate");
-const validToken = require("../middlewares/tokenCookie");
-const upload = require("../../utils/multer");
+const { Router } = require('express');
+const userValidation = require('../middlewares/user.validate');
+const validToken = require('../middlewares/tokenCookie');
+const upload = require('../../utils/multer');
 const {
   userSignUp,
   verifyUser,
@@ -9,25 +9,25 @@ const {
   profile,
   resetToken,
   resetPassword,
-} = require("../controllers/user.controller");
-const updateProfile = require("../controllers/profile.controller");
+} = require('../controllers/user.controller');
+const updateProfile = require('../controllers/profile.controller');
 
 const authrouter = Router();
 const userprofile = Router();
 
-authrouter.get("/verify", verifyUser);
-authrouter.post("/register", userValidation, userSignUp);
-authrouter.post("/login", userLogin);
-authrouter.post("/reset-token", resetToken);
+authrouter.get('/verify', verifyUser);
+authrouter.post('/register', userValidation, userSignUp);
+authrouter.post('/login', userLogin);
+authrouter.post('/reset-token', resetToken);
 // for frontend takes the token from the url & passes it as authorization header
 // authrouter.get('/reset-password/:token');
-authrouter.post("/reset-password", validToken, resetPassword);
+authrouter.post('/reset-password', validToken, resetPassword);
 
-userprofile.get("/", validToken, profile);
+userprofile.get('/', validToken, profile);
 userprofile.post(
-  "/update-profile",
+  '/update-profile',
   validToken,
-  upload.single("image"),
-  updateProfile
+  upload.single('image'),
+  updateProfile,
 );
 module.exports = { authrouter, userprofile };
