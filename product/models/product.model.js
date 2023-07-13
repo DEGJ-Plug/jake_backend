@@ -10,11 +10,6 @@ const productSchema = new mongoose.Schema(
       type: String,
       required: true,
     },
-    genre: {
-      type: String,
-      required: true,
-      enum: ['Electronics', 'Mobile Devices', 'Computing', 'Gaming', 'Fashion', 'Books', 'Party', 'Kitchen wares', 'Others'],
-    },
     quantity: {
       type: Number,
       required: true,
@@ -25,7 +20,7 @@ const productSchema = new mongoose.Schema(
     },
     genre: {
       type: String,
-      enum: ["electronics", "cosmetics", "clothing", "furniture", "others"],
+      enum: ['electronics', 'cosmetics', 'clothing', 'furniture', 'others', 'phones & tablets', 'computing', 'gaming', 'library', 'party', 'kitchen wares'],
     },
     img1: {
       type: String,
