@@ -1,4 +1,4 @@
-const mongoose = require("mongoose");
+const mongoose = require('mongoose');
 
 const productSchema = new mongoose.Schema(
   {
@@ -9,6 +9,11 @@ const productSchema = new mongoose.Schema(
     productDescription: {
       type: String,
       required: true,
+    },
+    genre: {
+      type: String,
+      required: true,
+      enum: ['Electronics', 'Mobile Devices', 'Computing', 'Gaming', 'Fashion', 'Books', 'Party', 'Kitchen wares', 'Others'],
     },
     quantity: {
       type: Number,
@@ -54,26 +59,30 @@ const productSchema = new mongoose.Schema(
       type: String,
       required: true,
     },
-    like: {
-      type: Boolean,
-      default: false,
+    likes: {
+      type: Number,
+      default: 0,
+    },
+    views: {
+      type: Number,
+      default: 0,
     },
     sellerId: {
       type: mongoose.Schema.Types.ObjectId,
-      ref: "User",
+      ref: 'User',
     },
     logisticsId: {
       type: mongoose.Schema.Types.ObjectId,
-      ref: "User",
+      ref: 'User',
     },
     buyerId: {
       type: mongoose.Schema.Types.ObjectId,
-      ref: "User",
+      ref: 'User',
     },
   },
-  { timestamps: true }
+  { timestamps: true },
 );
 
-const Product = mongoose.model("Product", productSchema);
+const Product = mongoose.model('Product', productSchema);
 
 module.exports = Product;

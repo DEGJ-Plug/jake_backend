@@ -1,4 +1,4 @@
-const mongoose = require("mongoose");
+const mongoose = require('mongoose');
 
 const avatarSchema = new mongoose.Schema({
   image: {
@@ -47,12 +47,12 @@ const profileSchema = new mongoose.Schema(
     },
     userId: {
       type: mongoose.Schema.Types.ObjectId,
-      ref: "User",
+      ref: 'User',
     },
   },
-  { timestamps: true }
+  { timestamps: true },
 );
 
-const Profile = mongoose.model("Profile", profileSchema);
+const Profile = mongoose.model('Profile', profileSchema);
 
 module.exports = Profile;

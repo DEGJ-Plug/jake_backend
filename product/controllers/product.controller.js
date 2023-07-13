@@ -14,10 +14,11 @@ const addProduct = async (req, res) => {
       !checkProfile.address ||
       !checkProfile.businessName ||
       !checkProfile.phoneNumber
-    )
+    ) {
       return res
         .status(400)
         .json({ message: "update profile before you add your products" });
+    }
 
     if (!productName || !productDescription || !quantity || !price || !genre)
       return res.status(400).json({
@@ -41,6 +42,7 @@ const addProduct = async (req, res) => {
       productDescription,
       quantity,
       price,
+      genre,
       img1: resultImg1.secure_url,
       img1PublicId: resultImg1.public_id,
       img2: resultImg2.secure_url,
