@@ -4,12 +4,11 @@ const cloudinary = require("../../utils/cloudinary");
 
 const addProduct = async (req, res) => {
   const { userId } = req.user;
-  const { productName, productDescription, quantity, price } = req.body;
+  const { productName, productDescription, quantity, price, genre } = req.body;
   const { image1, image2, image3, image4 } = req.files;
   try {
     const checkProfile = await Profile.findOne({ userId });
 
-    console.log(checkProfile);
     if (
       !checkProfile.location ||
       !checkProfile.address ||
@@ -20,14 +19,11 @@ const addProduct = async (req, res) => {
         .status(400)
         .json({ message: "update profile before you add your products" });
 
-    console.log(checkProfile.address);
-
-    if (!productName || !productDescription || !quantity || !price)
+    if (!productName || !productDescription || !quantity || !price || !genre)
       return res.status(400).json({
         message: "product name, description, quantity, price are required",
       });
 
-    console.log(req.files);
     if (!req.files)
       return res
         .status(400)
@@ -64,4 +60,43 @@ const addProduct = async (req, res) => {
   }
 };
 
-module.exports = addProduct;
+const getProducts = async (req, res) => {
+  const page = req.query.page || 1;
+  const size = req.query.size || 9;
+  const offset = (page - 1) * size;
+
+  try {
+    const products = await Product.find().skip(offset).limit(size);
+
+    return res.status(200).json({ products });
+  } catch (error) {
+    return res.status(500).json({ error: error.message });
+  }
+};
+
+const getProductByGenre = async (req, res) => {
+  let genre = req.params.genre;
+  try {
+    const products = await Product.find({ genre }).limit(6);
+    return res.status(200).json({ products });
+  } catch (error) {
+    return res.status(500).json({ error: error.message });
+  }
+};
+
+const getProduct = async (req, res) => {
+  const id = req.params.id;
+  try {
+    const product = await Product.findById(id);
+    return res.status(200).json({ product });
+  } catch (error) {
+    return res.status(500).json({ error: error.message });
+  }
+};
+
+module.exports = {
+  addProduct,
+  getProducts,
+  getProductByGenre,
+  getProduct,
+};

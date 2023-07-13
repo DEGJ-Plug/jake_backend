@@ -18,6 +18,10 @@ const productSchema = new mongoose.Schema(
       type: Number,
       required: true,
     },
+    genre: {
+      type: String,
+      enum: ["electronics", "cosmetics", "clothing", "furniture", "others"],
+    },
     img1: {
       type: String,
       required: true,

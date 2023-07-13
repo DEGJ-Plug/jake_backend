@@ -124,6 +124,7 @@ const userLogin = async (req, res) => {
         );
         res.cookie("token", token);
         return res.status(200).json({
+          message: "logged in successfully",
           success: true,
           data: {
             userId: userExists._id,
