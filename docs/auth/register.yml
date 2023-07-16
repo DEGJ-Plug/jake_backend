@@ -1,0 +1,62 @@
+/auth/register:
+  post:
+    tags:
+      - Auth
+    summary: Create a new user
+    description: Creates a new user.
+    produces:
+      - application/json
+    consumes:
+      - application/json
+    parameters:
+      - in: body
+        name: body
+        schema:
+          type: object
+          properties:
+            userName:
+              type: string
+              example: emiwest
+              description: User's alias
+            email:
+              type: email
+              example: emiwest@yopmail.com
+              description: User's email address
+            password:
+              type: password
+              example: sabiguy
+    responses:
+      201:
+        description: Created
+        schema:
+          type: object
+          properties:
+            status:
+              type: string
+              example: success
+            message:
+              type: string
+              example: "emiwest, your account has been created successfully"
+            userId:
+              type: string
+              description: User's unique ID
+              example: 64b44c33cc576bb0e6cb5617
+            tokenExpiration:
+              type: string
+              example: 48 hours
+      400:
+        description: Duplicate account
+        schema:
+          type: object
+          properties:
+            message:
+              type: string
+              example: emiwest@yopmail.com has already been registered, please login or reset your password
+      500:
+        description: Server error
+        schema:
+          type: object
+          properties:
+            message:
+              type: string
+              example: Something went wrong

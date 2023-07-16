@@ -1,0 +1,4 @@
+{
+	"ext": ".js,.mjs,.coffee,.litcoffee,.json,.yaml,.yml",
+	"watch": "docs/*"
+}

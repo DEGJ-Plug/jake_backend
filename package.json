@@ -4,7 +4,7 @@
   "description": "An interactive e-commerce project",
   "main": "index.js",
   "scripts": {
-    "dev": "nodemon index.js",
+    "dev": "nodemon --config nodemon.json index.js",
     "start": "node index.js"
   },
   "repository": {

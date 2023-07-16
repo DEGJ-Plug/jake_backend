@@ -1,0 +1,18 @@
+/users:
+  get:
+    tags:
+      - Users
+    summary: Returns a list of users.
+    description: People Who are already registered
+    responses:
+      200: # status code
+        description: Successul Response
+        schema:
+          type: array
+          items:
+            type: object
+            properties:
+              id:
+                type: integer
+              name:
+                type: string
