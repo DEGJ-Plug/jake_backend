@@ -1,0 +1,88 @@
+/update-profile:
+  post:
+    tags:
+      - Profile
+    summary: Update profile
+    description: Updates profile of current user
+    security:
+      - Bearer: ["Authorization"]
+    produces:
+      - application/json
+    consumes:
+      - multipart/form-data
+    parameters:
+      - in: formData
+        name: firstName
+        required: false
+        type: string
+        example: Emmanuel
+      - in: formData
+        name: lastName
+        required: false
+        type: string
+        example: Fasogba
+      - in: formData
+        name: role
+        required: false
+        type: string
+        example: seller
+      - in: formData
+        name: phoneNumber
+        required: false
+        type: string
+        example: "09031380883"
+      - in: formData
+        name: address
+        required: false
+        type: string
+        example: somewhere on earth
+      - in: formData
+        name: gender
+        required: false
+        type: string
+        example: Male
+      - in: formData
+        name: location
+        required: false
+        type: string
+        example: Lagos
+      - in: formData
+        name: businessName
+        required: false
+        type: string
+        example: De-Light Ventures
+      - in: formData
+        name: image
+        required: false
+        type: file
+        example: profile_pic.jpg
+    responses:
+      200: # status code
+        description: Successul Response
+        schema:
+          type: object
+          properties:
+            message:
+              type: string
+              example: Welcome back emiwest
+            user:
+              type: object
+              properties:
+                userId:
+                  type: string
+                  example: 64b44c33cc576bb0e6cb5617
+                email:
+                  type: string
+                  example: emiwest@yopmail.com
+                userName:
+                  type: string
+                  example: emiwest
+                role:
+                  type: string
+                  example: buyer
+                iat:
+                  type: integer
+                  example: 21535762178
+                exp:
+                  type: integer
+                  example: 498451056584

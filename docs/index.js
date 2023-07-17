@@ -32,6 +32,8 @@ const register = YAML.load('./docs/auth/register.yml');
 const login = YAML.load('./docs/auth/login.yml');
 const forgotPassword = YAML.load('./docs/auth/reset-token.yml');
 const updatePassword = YAML.load('./docs/auth/reset-password.yml');
+const user = YAML.load('./docs/profile/users.yaml');
+const update = YAML.load('./docs/profile/update_profile.yaml');
 
 swaggerDocument.paths = {
   ...swaggerDocument.paths,
@@ -39,6 +41,8 @@ swaggerDocument.paths = {
   ...login,
   ...forgotPassword,
   ...updatePassword,
+  ...user,
+  ...update,
 };
 
 module.exports = swaggerDocument;

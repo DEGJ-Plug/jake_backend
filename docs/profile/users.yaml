@@ -1,0 +1,36 @@
+/user:
+  get:
+    tags:
+      - Profile
+    summary: User profile
+    description: Returns profile of current user.
+    responses:
+      200: # status code
+        description: Successul Response
+        schema:
+          type: object
+          properties:
+            message:
+              type: string
+              example: Welcome back emiwest
+            user:
+              type: object
+              properties:
+                userId:
+                  type: string
+                  example: 64b44c33cc576bb0e6cb5617
+                email:
+                  type: string
+                  example: emiwest@yopmail.com
+                userName:
+                  type: string
+                  example: emiwest
+                role:
+                  type: string
+                  example: buyer
+                iat:
+                  type: integer
+                  example: 21535762178
+                exp:
+                  type: integer
+                  example: 498451056584
