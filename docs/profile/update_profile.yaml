@@ -1,4 +1,4 @@
-/update-profile:
+/user/update-profile:
   post:
     tags:
       - Profile
