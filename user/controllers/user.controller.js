@@ -175,7 +175,7 @@ async function resetToken(req, res) {
         process.env.JWT_VERIFICATION_SECRET,
         { expiresIn: process.env.JWT_LOGIN_EXP },
       );
-      const resetLink = `${process.env.SITE_URL}:${process.env.PORT}/auth/reset-password/${token}`;
+      const resetLink = `${process.env.SITE_URL}/auth/reset/${token}`;
       await sendEmail({
         email,
         subject: 'Password Reset',
